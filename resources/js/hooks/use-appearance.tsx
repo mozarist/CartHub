@@ -85,6 +85,30 @@ export function initializeTheme(): void {
 
     // Set up system theme change listener
     mediaQuery()?.addEventListener('change', handleSystemThemeChange);
+    
+    // Toggle theme when user presses the "d" key (unless typing in an input)
+    const keyHandler = (e: KeyboardEvent): void => {
+        if (e.key.toLowerCase() !== 'd') {
+            return;
+        }
+
+        const target = e.target as HTMLElement | null;
+        if (target) {
+            const tag = target.tagName;
+            if (
+                tag === 'INPUT' ||
+                tag === 'TEXTAREA' ||
+                tag === 'SELECT' ||
+                target.isContentEditable
+            ) {
+                return;
+            }
+        }
+
+        toggleAppearance();
+    };
+
+    document.addEventListener('keydown', keyHandler);
 }
 
 export function useAppearance(): UseAppearanceReturn {
@@ -112,4 +136,25 @@ export function useAppearance(): UseAppearanceReturn {
     };
 
     return { appearance, resolvedAppearance, updateAppearance } as const;
+}
+
+export function setAppearance(mode: Appearance): void {
+    currentAppearance = mode;
+
+    try {
+        localStorage.setItem('appearance', mode);
+    } catch (err) {
+        // ignore localStorage errors
+    }
+
+    setCookie('appearance', mode);
+    applyTheme(mode);
+    notify();
+}
+
+export function toggleAppearance(): void {
+    const currentlyDark = isDarkMode(currentAppearance);
+    const target: Appearance = currentlyDark ? 'light' : 'dark';
+
+    setAppearance(target);
 }
