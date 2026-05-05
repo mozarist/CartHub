@@ -3,12 +3,10 @@ import {
     Home,
     LayoutGrid,
     Bell,
-    User,
-    Package,
 } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -19,9 +17,14 @@ import {
     DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { login, logout, register } from '@/routes';
+
 import AppLogo from '../app-logo';
 
 export default function NavBar() {
+    const { auth } = usePage().props;
+    const user = auth.user;
+
     return (
         <>
             <div className="h-16 w-full" />
@@ -71,43 +74,69 @@ export default function NavBar() {
                         <Bell className="size-5" />
                         <span className="sr-only">Notifications</span>
                     </Button>
-                    {/* Profile Dropdown */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Avatar className="h-8 w-8 cursor-pointer">
-                                <AvatarImage
-                                    src="https://ui-avatars.com/api/?name=Mozarist"
-                                    alt="Profile"
-                                />
-                                <AvatarFallback>MO</AvatarFallback>
-                            </Avatar>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="min-w-48">
-                            <DropdownMenuLabel>
-                                <div>
-                                    <span className="truncate text-sm font-medium text-muted-foreground">
-                                        Mozarist
-                                    </span>
-                                    <p className="truncate text-xs text-muted-foreground">
-                                        azzammozarist@gmail.com
-                                    </p>
-                                </div>
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuGroup>
-                                <DropdownMenuItem>Profile</DropdownMenuItem>
-                                <DropdownMenuItem>Your Orders</DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    Transaction History
+                    {user ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Avatar className="h-8 w-8 cursor-pointer">
+                                    <AvatarImage
+                                        src={user.avatar}
+                                        alt={user.name}
+                                    />
+                                    <AvatarFallback>
+                                        {user.name
+                                            .split(' ')
+                                            .map((chunk) => chunk[0])
+                                            .join('')
+                                            .slice(0, 2)
+                                            .toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="min-w-48">
+                                <DropdownMenuLabel>
+                                    <div>
+                                        <span className="truncate text-sm font-medium text-foreground">
+                                            {user.name}
+                                        </span>
+                                        <p className="truncate text-xs text-muted-foreground">
+                                            {user.email}
+                                        </p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        Your Orders
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        Transaction History
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild variant="destructive">
+                                    <Link
+                                        className="block w-full cursor-pointer"
+                                        href={logout()}
+                                        as="button"
+                                        method="post"
+                                    >
+                                        Logout
+                                    </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>Settings</DropdownMenuItem>
-                            </DropdownMenuGroup>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem variant="destructive">
-                                Logout
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <div className="ml-1 flex items-center gap-2">
+                            <Button variant="default" asChild>
+                                <Link href={login()}>Login</Link>
+                            </Button>
+                            <Button variant="outline" asChild>
+                                <Link href={register()}>Register</Link>
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </nav>
         </>
