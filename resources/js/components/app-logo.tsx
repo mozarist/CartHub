@@ -3,12 +3,12 @@ import AppLogoIcon from '@/components/app-logo-icon';
 export default function AppLogo() {
     return (
         <>
-            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+            <div className="flex aspect-square size-5 items-center justify-center rounded-md text-sidebar-primary-foreground">
                 <AppLogoIcon />
             </div>
-            <div className="ml-1 grid flex-1 text-left text-base">
+            <div className="grid flex-1 text-left text-base">
                 <span className="truncate leading-tight font-semibold">
-                    ShopHub Admin
+                    ShopHub
                 </span>
             </div>
         </>

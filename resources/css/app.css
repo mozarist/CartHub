@@ -136,8 +136,18 @@
     * {
         @apply border-border;
     }
+    /* Chrome, Edge, Safari */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Firefox */
+    html {
+        scrollbar-width: none;
+    }
 
     body {
         @apply bg-background text-foreground;
+        -ms-overflow-style: none;
     }
 }
