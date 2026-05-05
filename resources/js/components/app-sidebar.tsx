@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, Package, Store,  } from 'lucide-react';
+import { LayoutGrid, Package, Store,  } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
+import { useSidebar } from '@/components/ui/sidebar';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -35,6 +36,8 @@ const mainNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { state } = useSidebar();
+    
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
@@ -42,7 +45,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href={dashboard()} prefetch>
-                                <AppLogo />
+                                <AppLogo collapsed={state === 'collapsed'} />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
