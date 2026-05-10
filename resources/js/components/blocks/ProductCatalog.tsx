@@ -1,19 +1,7 @@
-import { useState } from 'react';
 import { Card, CardContent, CardFooter, CardTitle } from '../ui/card';
-import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import {
-    Search,
-    Home,
-    Music,
-    Smartphone,
-    HardDrive,
-    Sparkles,
-    TrendingUp,
-    Percent,
-    Star,
-    Truck,
     Wallet,
     ShoppingCart,
 } from 'lucide-react';
@@ -28,17 +16,6 @@ interface Product {
     image: string;
 }
 
-const categories = [
-    { id: 1, name: 'All Product', icon: null, count: 32 },
-    { id: 2, name: 'For Home', icon: Home, count: null },
-    { id: 3, name: 'For Music', icon: Music, count: null },
-    { id: 4, name: 'For Phone', icon: Smartphone, count: null },
-    { id: 5, name: 'For Storage', icon: HardDrive, count: null },
-    { id: 6, name: 'New Arrival', icon: Sparkles, count: null },
-    { id: 7, name: 'Best Seller', icon: TrendingUp, count: null },
-    { id: 8, name: 'On Discount', icon: Percent, count: null },
-];
-
 const products: Product[] = [
     {
         id: 1,
@@ -47,7 +24,7 @@ const products: Product[] = [
         price: 29.9,
         rating: 5.0,
         reviews: 1200,
-        image: 'https://via.placeholder.com/280x280?text=Phone+Holder',
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
         id: 2,
@@ -56,7 +33,7 @@ const products: Product[] = [
         price: 12.0,
         rating: 5.0,
         reviews: 1200,
-        image: 'https://via.placeholder.com/280x280?text=Headphones',
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
         id: 3,
@@ -65,7 +42,7 @@ const products: Product[] = [
         price: 29.9,
         rating: 4.4,
         reviews: 1000,
-        image: 'https://via.placeholder.com/280x280?text=Cleaner',
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
         id: 4,
@@ -74,7 +51,7 @@ const products: Product[] = [
         price: 45.5,
         rating: 4.8,
         reviews: 850,
-        image: 'https://via.placeholder.com/280x280?text=Camera',
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
         id: 5,
@@ -83,7 +60,7 @@ const products: Product[] = [
         price: 89.99,
         rating: 4.7,
         reviews: 650,
-        image: 'https://via.placeholder.com/280x280?text=Purifier',
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
         id: 6,
@@ -92,61 +69,18 @@ const products: Product[] = [
         price: 49.99,
         rating: 4.6,
         reviews: 2100,
-        image: 'https://via.placeholder.com/280x280?text=Earbuds',
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
 ];
 
 export default function ProductCatalog() {
-    const [selectedCategory, setSelectedCategory] = useState(1);
-    const [searchQuery, setSearchQuery] = useState('');
-
     return (
-        <Card className="w-full rounded-3xl p-8">
+        <Card className="w-full p-4 border-transparent shadow-none">
             {/* Main Content */}
             <div className="flex flex-col gap-8 md:flex-row">
-                {/* Sidebar Categories */}
-                <div className="w-full space-y-3 md:w-56 md:flex-shrink-0">
-                    <h2 className="text-lg font-semibold text-foreground">
-                        Category
-                    </h2>
-                    <div className="space-y-2">
-                        {categories.map((category) => {
-                            const Icon = category.icon;
-                            return (
-                                <button
-                                    key={category.id}
-                                    onClick={() =>
-                                        setSelectedCategory(category.id)
-                                    }
-                                    className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors ${
-                                        selectedCategory === category.id
-                                            ? 'bg-primary text-primary-foreground'
-                                            : 'hover:bg-secondary'
-                                    }`}
-                                >
-                                    {Icon && (
-                                        <Icon className="h-5 w-5 flex-shrink-0" />
-                                    )}
-                                    <span className="flex-1">
-                                        {category.name}
-                                    </span>
-                                    {category.count && (
-                                        <Badge
-                                            variant="secondary"
-                                            className="ml-auto"
-                                        >
-                                            {category.count}
-                                        </Badge>
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-
                 {/* Products Grid */}
                 <div className="flex-1">
-                    <div className="grid auto-rows-max grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid auto-rows-max grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         {products.map((product) => (
                             <Card
                                 key={product.id}
