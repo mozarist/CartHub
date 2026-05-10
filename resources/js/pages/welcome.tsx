@@ -2,6 +2,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { dashboard, login, register } from '@/routes';
 import NavBar from '@/components/blocks/navbar';
 import ProductCatalog from '@/components/blocks/ProductCatalog';
+import Footer from '@/components/blocks/footer';
 
 export default function Welcome({
     canRegister = true,
@@ -23,6 +24,8 @@ export default function Welcome({
                 </p>
                 <ProductCatalog />
             </div>
+
+            <Footer />
         </>
     );
 }
