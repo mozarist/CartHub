@@ -1,6 +1,8 @@
 <?php
 
 use Laravel\Fortify\Features;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::registration());
@@ -13,6 +15,12 @@ test('registration screen can be rendered', function () {
 });
 
 test('new users can register', function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    Role::findOrCreate('customer', 'web');
+
+    $this->get(route('home'));
+    $this->get(route('register'));
+
     $response = $this->post(route('register.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -21,5 +29,6 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    expect(auth()->user()?->hasRole('customer'))->toBeTrue();
+    $response->assertRedirect(route('home', absolute: false));
 });

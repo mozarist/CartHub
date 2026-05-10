@@ -3,6 +3,8 @@
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Features;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
@@ -11,7 +13,33 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    Role::findOrCreate('customer', 'web');
+
     $user = User::factory()->create();
+    $user->assignRole('customer');
+
+    $this->get(route('home'));
+    $this->get(route('login'));
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('home', absolute: false));
+});
+
+test('sellers are redirected to the dashboard after login', function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    Role::findOrCreate('seller', 'web');
+
+    $user = User::factory()->create();
+    $user->assignRole('seller');
+
+    $this->get(route('home'));
+    $this->get(route('login'));
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,

@@ -4,12 +4,16 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Http\Responses\LoginResponse;
+use App\Http\Responses\RegisterResponse;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 
@@ -20,7 +24,8 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
+        $this->app->singleton(RegisterResponseContract::class, RegisterResponse::class);
     }
 
     /**
@@ -47,11 +52,15 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureViews(): void
     {
-        Fortify::loginView(fn (Request $request) => Inertia::render('auth/login', [
-            'canResetPassword' => Features::enabled(Features::resetPasswords()),
-            'canRegister' => Features::enabled(Features::registration()),
-            'status' => $request->session()->get('status'),
-        ]));
+        Fortify::loginView(function (Request $request) {
+            $this->storePreLoginUrl($request);
+
+            return Inertia::render('auth/login', [
+                'canResetPassword' => Features::enabled(Features::resetPasswords()),
+                'canRegister' => Features::enabled(Features::registration()),
+                'status' => $request->session()->get('status'),
+            ]);
+        });
 
         Fortify::resetPasswordView(fn (Request $request) => Inertia::render('auth/reset-password', [
             'email' => $request->email,
@@ -66,7 +75,11 @@ class FortifyServiceProvider extends ServiceProvider
             'status' => $request->session()->get('status'),
         ]));
 
-        Fortify::registerView(fn () => Inertia::render('auth/register'));
+        Fortify::registerView(function (Request $request) {
+            $this->storePreRegisterUrl($request);
+
+            return Inertia::render('auth/register');
+        });
 
         Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/two-factor-challenge'));
 
@@ -87,5 +100,79 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
+    }
+
+    private function storePreLoginUrl(Request $request): void
+    {
+        $previousUrl = url()->previous();
+        if (! is_string($previousUrl) || $previousUrl === '') {
+            return;
+        }
+
+        $previousHost = parse_url($previousUrl, PHP_URL_HOST);
+        if (is_string($previousHost) && $previousHost !== '' && $previousHost !== $request->getHost()) {
+            return;
+        }
+
+        $previousPath = parse_url($previousUrl, PHP_URL_PATH) ?? '';
+        $currentPath = $request->getPathInfo();
+
+        if ($previousPath === $currentPath) {
+            return;
+        }
+
+        $disallowedPaths = [
+            '/login',
+            '/register',
+            '/dashboard',
+            '/forgot-password',
+            '/reset-password',
+            '/two-factor-challenge',
+            '/email/verify',
+            '/user/confirm-password',
+        ];
+
+        if (in_array($previousPath, $disallowedPaths, true)) {
+            return;
+        }
+
+        $request->session()->put('auth.pre_login_url', $previousUrl);
+    }
+
+    private function storePreRegisterUrl(Request $request): void
+    {
+        $previousUrl = url()->previous();
+        if (! is_string($previousUrl) || $previousUrl === '') {
+            return;
+        }
+
+        $previousHost = parse_url($previousUrl, PHP_URL_HOST);
+        if (is_string($previousHost) && $previousHost !== '' && $previousHost !== $request->getHost()) {
+            return;
+        }
+
+        $previousPath = parse_url($previousUrl, PHP_URL_PATH) ?? '';
+        $currentPath = $request->getPathInfo();
+
+        if ($previousPath === $currentPath) {
+            return;
+        }
+
+        $disallowedPaths = [
+            '/login',
+            '/register',
+            '/dashboard',
+            '/forgot-password',
+            '/reset-password',
+            '/two-factor-challenge',
+            '/email/verify',
+            '/user/confirm-password',
+        ];
+
+        if (in_array($previousPath, $disallowedPaths, true)) {
+            return;
+        }
+
+        $request->session()->put('auth.pre_register_url', $previousUrl);
     }
 }
