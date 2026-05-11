@@ -1,7 +1,7 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { ImageOff, PlusCircle } from 'lucide-react';
+import ProductCatalogDrawer from '@/components/product-catalog-drawer';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -59,13 +59,7 @@ export default function ProductCatalog({ products }: { products: Product[] }) {
                                 Manage your listed products and monitor stock.
                             </CardDescription>
                         </div>
-
-                        <Button asChild className="shrink-0">
-                            <Link href="/dashboard/products/create" prefetch>
-                                <PlusCircle className="size-4" />
-                                Add New Product
-                            </Link>
-                        </Button>
+                        <ProductCatalogDrawer />
                     </CardHeader>
 
                     <CardContent>
