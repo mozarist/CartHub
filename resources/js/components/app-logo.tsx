@@ -9,7 +9,7 @@ export default function AppLogo({ collapsed = false }: { collapsed?: boolean }) 
         );
     }
     return (
-        <>
+        <div className="flex items-center gap-1.5">
             <div className="flex aspect-square size-5 items-center justify-center rounded-md text-sidebar-primary-foreground">
                 <AppLogoIcon />
             </div>
@@ -18,6 +18,6 @@ export default function AppLogo({ collapsed = false }: { collapsed?: boolean }) 
                     ShopHub
                 </span>
             </div>
-        </>
+        </div>
     );
 }
