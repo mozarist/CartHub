@@ -59,6 +59,50 @@ const products: Product[] = [
         reviews: 850,
         image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
+    {
+        id: 5,
+        name: 'Phone Holder Sakti',
+        category: 'Other',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda, quod harum cum explicabo veniam neque molestias sapiente architecto sint provident deserunt? Dicta rem ipsum repudiandae.',
+        price: 29.9,
+        rating: 5.0,
+        reviews: 1200,
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    {
+        id: 6,
+        name: 'Headsound',
+        category: 'Music',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda, quod harum cum explicabo veniam neque molestias sapiente architecto sint provident deserunt? Dicta rem ipsum repudiandae.',
+        price: 12.0,
+        rating: 5.0,
+        reviews: 1200,
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    {
+        id: 7,
+        name: 'Adudu Cleaner',
+        category: 'Other',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda, quod harum cum explicabo veniam neque molestias sapiente architecto sint provident deserunt? Dicta rem ipsum repudiandae.',
+        price: 29.9,
+        rating: 4.4,
+        reviews: 1000,
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    {
+        id: 8,
+        name: 'Smart Camera',
+        category: 'Home',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda, quod harum cum explicabo veniam neque molestias sapiente architecto sint provident deserunt? Dicta rem ipsum repudiandae.',
+        price: 45.5,
+        rating: 4.8,
+        reviews: 850,
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
 ];
 
 export default function ProductCatalog() {
