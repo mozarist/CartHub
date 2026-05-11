@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -15,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('dashboard.products.index', [
+        return Inertia::render('dashboard/products/index', [
             'products' => Product::with('images')->get(),
         ]);
     }
@@ -51,7 +52,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('products.index')
+        return redirect()->route('dashboard.products.index')
             ->with('success', 'Product created successfully.');
     }
 
@@ -103,7 +104,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('products.index')
+        return redirect()->route('dashboard.products.index')
             ->with('success', 'Product updated successfully.');
     }
 
@@ -119,7 +120,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.index')
+        return redirect()->route('dashboard.products.index')
             ->with('success', 'Product deleted successfully.');
     }
 }
