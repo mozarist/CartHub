@@ -1,5 +1,22 @@
 import { Head, Link } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { ImageOff, PlusCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 
 type Product = {
     id: number;
@@ -13,83 +30,132 @@ type Product = {
     }[];
 };
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 2,
+});
+
+const getPrimaryImage = (images?: Product['images']) => {
+    if (!images || images.length === 0) {
+        return null;
+    }
+
+    return images.find((image) => image.is_primary) ?? images[0];
+};
+
 export default function ProductCatalog({ products }: { products: Product[] }) {
     return (
         <>
             <Head title="Product Catalog" />
+            <div className="p-4 md:p-6">
+                <Card className="gap-4">
+                    <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="space-y-0">
+                            <CardTitle className="text-xl">
+                                Product Catalog
+                            </CardTitle>
+                            <CardDescription>
+                                Manage your listed products and monitor stock.
+                            </CardDescription>
+                        </div>
 
-            <div className="px-6 py-4">
-                <div className="mb-6 flex items-center justify-between">
-                    <h1 className="text-2xl font-semibold">Product Catalog</h1>
-                    <Link
-                        href="/dashboard/products/create"
-                        className="inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
-                    >
-                        <Plus className="h-4 w-4" />
-                        Add New Product
-                    </Link>
-                </div>
+                        <Button asChild className="shrink-0">
+                            <Link href="/dashboard/products/create" prefetch>
+                                <PlusCircle className="size-4" />
+                                Add New Product
+                            </Link>
+                        </Button>
+                    </CardHeader>
 
-                <div className="overflow-x-auto rounded-md bg-white shadow-sm">
-                    <table className="min-w-full divide-y divide-slate-100">
-                        <thead className="bg-slate-50">
-                            <tr>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-600">
-                                    Image
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-600">
-                                    Name
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-600">
-                                    Category
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-600">
-                                    Price
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-600">
-                                    Stock
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {products.map((product) => {
-                                const primary =
-                                    product.images && product.images.length
-                                        ? product.images.find(
-                                              (i) => i.is_primary,
-                                          ) || product.images[0]
-                                        : null;
-                                return (
-                                    <tr key={product.id}>
-                                        <td className="px-4 py-3">
-                                            {primary ? (
-                                                <img
-                                                    src={`/storage/${primary.image_path}`}
-                                                    alt={product.product_name}
-                                                    className="h-12 w-12 rounded object-cover"
-                                                />
-                                            ) : (
-                                                <div className="h-12 w-12 rounded bg-slate-100" />
-                                            )}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            {product.product_name}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            {product.category}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            ${product.price}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            {product.stock}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                    <CardContent>
+                        {products.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed py-12 text-center">
+                                <PlusCircle className="size-9 text-muted-foreground" />
+                                <p className="text-sm text-muted-foreground">
+                                    No products yet. Click Add New Product to
+                                    create your first listing.
+                                </p>
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-20">
+                                            Image
+                                        </TableHead>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Category</TableHead>
+                                        <TableHead className="text-right">
+                                            Price
+                                        </TableHead>
+                                        <TableHead className="text-right">
+                                            Stock
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+
+                                <TableBody>
+                                    {products.map((product) => {
+                                        const primaryImage = getPrimaryImage(
+                                            product.images,
+                                        );
+
+                                        return (
+                                            <TableRow key={product.id}>
+                                                <TableCell>
+                                                    {primaryImage ? (
+                                                        <img
+                                                            src={`/storage/${primaryImage.image_path}`}
+                                                            alt={
+                                                                product.product_name
+                                                            }
+                                                            className="size-12 rounded-lg object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex size-12 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                                                            <ImageOff className="size-4" />
+                                                        </div>
+                                                    )}
+                                                </TableCell>
+
+                                                <TableCell className="font-medium">
+                                                    {product.product_name}
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <Badge variant="secondary">
+                                                        {product.category}
+                                                    </Badge>
+                                                </TableCell>
+
+                                                <TableCell className="text-right font-medium">
+                                                    {currencyFormatter.format(
+                                                        Number(product.price),
+                                                    )}
+                                                </TableCell>
+
+                                                <TableCell className="text-right">
+                                                    <Badge
+                                                        variant={
+                                                            product.stock > 0
+                                                                ? 'outline'
+                                                                : 'destructive'
+                                                        }
+                                                    >
+                                                        {product.stock > 0
+                                                            ? `${product.stock} in stock`
+                                                            : 'Out of stock'}
+                                                    </Badge>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                        )}
+                    </CardContent>
+                </Card>
             </div>
         </>
     );
