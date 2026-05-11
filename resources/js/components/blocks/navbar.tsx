@@ -28,7 +28,7 @@ export default function NavBar() {
     return (
         <>
             <div className="h-16 w-full" />
-            <nav className="fixed top-0 right-0 left-0 z-50 flex items-center justify-center h-16 px-5 2xl:px-16 border-b border-border bg-card">
+            <nav className="fixed top-0 right-0 left-0 z-50 flex items-center justify-center h-16 px-5 border-b border-border bg-card">
                 <div className="flex items-center justify-between w-full max-w-7xl">
                     {/* Logo */}
                     <a
